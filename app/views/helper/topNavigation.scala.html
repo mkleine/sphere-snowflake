@@ -4,6 +4,11 @@
             <li class="nav-link">
                 <a class="brand" href="/">Sphere</a>
             </li>
+            <li class="nav-link">|</li>
+            <li class="nav-link">
+                @* TODO this link must be guarded by proper authorization of the logged-in user*@
+                <a href="@routes.Dashboard.show">Dashboard</a>
+            </li>
         </ul>
         <ul class="nav pull-right">
         @if(isLoggedIn) {

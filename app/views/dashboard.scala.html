@@ -1,0 +1,100 @@
+@(products: SearchResult[Product], customers: QueryResult[Customer], orders: QueryResult[Order], ordersByCustomerId : com.google.common.collect.HashMultimap[String, Order])
+
+@* //TODO: The HTML should be assembled in a way similar to the other views (i.e. using templates and ajax calls instead of using a table) *@
+
+@scripts = {
+}
+
+@main("Dashboard", "dashboard", scripts){
+    <div class="navigation">
+        @helper.topNavigation()
+    </div>
+}{
+    <div id="dashboard">
+
+        <div>
+
+            <div id="dashboard-summary">
+                <table>
+                    <tbody>
+                    <tr>
+                        <td>
+                            Number of products:
+                        </td>
+                        <td>
+                            @products.getTotal()
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Number of customers:
+                        </td>
+                        <td>
+                            @customers.getTotal()
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Number of orders:
+                        </td>
+                        <td>
+                            @orders.getTotal()
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            @if(customers.getTotal() > 0) {
+            <div id="dashboard-body">
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Customer</td>
+                            <td>Orders</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    @for(customer <- customers.getResults()) {
+                        <tr>
+                            <td>
+                                <div class="nav-link">
+                                    <a href="@routes.Customers.display(customer.getId())">
+                                        @customer.getEmail()
+                                    </a>
+                                </div>
+                            </td>
+                            <td>
+                                @if(!ordersByCustomerId.containsKey(customer.getId())) {
+                                    <div>
+                                        None
+                                    </div>
+                                } else {
+                                    <ul>
+                                        @for(order <- ordersByCustomerId.get(customer.getId())) {
+                                        <li>
+                                            <div class="nav-link">
+                                                <a href="@routes.Dashboard.displayOrder(order.getId())">
+                                                    @order.getId()
+                                                </a>
+                                            </div>
+                                        </li>
+                                        }
+
+                                    </ul>
+                                }
+                            </td>
+                        </tr>
+                    }
+
+                    </tbody>
+                </table>
+            </div>
+            }
+        </div>
+    </div>
+}{
+
+}

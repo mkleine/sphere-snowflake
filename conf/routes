@@ -20,6 +20,7 @@ POST    /cart/remove                                        controllers.Carts.re
 
 # Checkout
 GET     /checkout                                           controllers.Checkouts.show()
+GET     /checkout/:id                                       controllers.Dashboard.displayOrder(id:String)
 POST    /checkout                                           controllers.Checkouts.submit()
 
 GET     /checkout/shipping/address                          controllers.Checkouts.showShippingAddress()
@@ -43,6 +44,7 @@ POST    /user/password/reset                                controllers.Login.re
 
 # Customer
 GET     /user                                               controllers.Customers.show()
+GET     /user/:id                                           controllers.Customers.display(id:String)
 
 POST    /user/update                                        controllers.Customers.update()
 POST    /user/update/password                               controllers.Customers.updatePassword()
@@ -60,6 +62,8 @@ GET     /assets/*file                                       controllers.Assets.a
 
 # Product
 GET     /:product-$variant<[0-9]+>.html                     controllers.Products.select(product: String, variant: Int)
+
+GET     /dashboard                                          controllers.Dashboard.show()
 
 # Category
 GET     /$path<([^.]+/)?>$category<[^/.]+>                  controllers.Categories.select(path: String, category: String, page: Int ?= 1)

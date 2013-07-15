@@ -2,10 +2,10 @@ package controllers;
 
 import controllers.actions.Ajax;
 import controllers.actions.Authorization;
-import forms.addressForm.SetAddress;
 import forms.customerForm.UpdateCustomer;
 import forms.passwordForm.UpdatePassword;
 import io.sphere.client.exceptions.InvalidPasswordException;
+import io.sphere.client.model.QueryResult;
 import io.sphere.client.shop.model.Customer;
 import io.sphere.client.shop.model.CustomerUpdate;
 import io.sphere.client.shop.model.Order;
@@ -26,6 +26,14 @@ public class Customers extends ShopController {
     final static Form<UpdateCustomer> updateCustomerForm = form(UpdateCustomer.class);
     final static Form<UpdatePassword> updatePasswordForm = form(UpdatePassword.class);
 
+    public static Result display(String id) {
+        // TODO this must not be done without proper authorization!
+        final Customer customer = sphere().client().customers().byId(id).fetch().or(sphere().currentCustomer().fetch());
+        final QueryResult<Order> orders = sphere().client().orders().forCustomer(customer.getId()).fetch();
+        Form<UpdateCustomer> customerForm = updateCustomerForm.fill(new UpdateCustomer(customer));
+
+        return ok(customers.render(customer, orders.getResults(), customerForm, updatePasswordForm));
+    }
 
     public static Result show() {
         Customer customer = sphere().currentCustomer().fetch();
